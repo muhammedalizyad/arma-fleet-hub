@@ -1,0 +1,5 @@
+name = "arma-fleet-hub"
+compatibility_date = "2026-05-05"
+
+[pages]
+execution_context = "production"

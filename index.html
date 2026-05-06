@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#0a0e1a">
-<title>Fleet Hub — Arma-Hire</title>
+<title>Fleet Hub v2.8 — Arma-Hire</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="fleet.css">
@@ -12,36 +12,50 @@
 <body>
 
 <!-- ── Sidebar ── -->
-<aside class="sidebar" id="sidebar">
+<aside class="sidebar">
   <div class="sidebar-logo">
-    <svg viewBox="0 0 28 28" fill="none"><rect x="2" y="8" width="24" height="16" rx="3" stroke="currentColor" stroke-width="1.5"/><circle cx="10" cy="20" r="3" stroke="currentColor" stroke-width="1.5"/><circle cx="20" cy="20" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M14 8V4M10 4h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-    <div><h1>Fleet Hub</h1><span>Arma-Hire</span></div>
+    <div class="logo-icon">FH</div>
+    <div><h1>Fleet Hub</h1><span>Arma-Hire · Manager</span></div>
   </div>
-  <nav class="sidebar-nav" id="nav">
-    <div class="nav-item active" data-view="fleet" onclick="switchView('fleet')">
+  <nav class="sidebar-nav">
+    <div class="nav-item active" onclick="switchView('fleet')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
       Fleet Overview
       <span class="nav-count" id="fleet-count">20</span>
     </div>
-    <div class="nav-item" data-view="map" onclick="openMap()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="10" r="3"/><path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 13 8 13s8-7.75 8-13a8 8 0 0 0-8-8z"/></svg>
-      Fleet Map
-      <span class="nav-count" id="map-count">6</span>
+    <div class="nav-item" onclick="switchView('tracked')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      Live Tracking
+      <span class="nav-count" id="live-count">0</span>
     </div>
-    <div class="nav-item" data-view="needs" onclick="switchView('needs')">
+    <div class="nav-item" onclick="switchView('moving')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      Moving Now
+      <span class="nav-dot" style="background:var(--green)"></span>
+      <span class="nav-count" id="moving-count">0</span>
+    </div>
+    <div class="sidebar-section-label">Alerts</div>
+    <div class="nav-item" onclick="switchView('attention')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
       Needs Attention
-      <span class="nav-count" id="needs-count">0</span>
+      <span class="nav-dot" style="background:var(--red)"></span>
+      <span class="nav-count" id="needs-count" style="color:var(--red)">0</span>
     </div>
-    <div class="nav-item" data-view="tracked" onclick="switchView('tracked')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-      Tracked Live
-      <span class="nav-count" id="tracked-count">6</span>
+    <div class="nav-item" onclick="switchView('noinsurance')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      No Insurance
+      <span class="nav-count" id="noins-count" style="color:var(--amber)">0</span>
+    </div>
+    <div class="sidebar-section-label">Tools</div>
+    <div class="nav-item" onclick="openMap()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="10" r="3"/><path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 13 8 13s8-7.75 8-13a8 8 0 0 0-8-8z"/></svg>
+      Live Map
+      <span class="nav-count" id="map-side-count">6</span>
     </div>
   </nav>
   <div class="sidebar-footer">
     <span class="user">test@arma-hire.co.uk</span>
-    <span>manager · fleet.arma-hire.co.uk</span>
+    <span>fleet.arma-hire.co.uk</span>
   </div>
 </aside>
 
@@ -52,7 +66,7 @@
   <header class="header">
     <div>
       <div class="header-title" id="view-title">Fleet Overview</div>
-      <div class="header-subtitle" id="view-subtitle">All 20 vehicles at a glance</div>
+      <div class="header-subtitle" id="view-subtitle">All 20 vehicles · 6 tracked live</div>
     </div>
     <div class="header-right">
       <div class="search-box">
@@ -60,8 +74,12 @@
         <input type="text" placeholder="Search reg, make, driver..." id="search-input" oninput="filterFleet()">
       </div>
       <button class="header-btn" onclick="openMap()">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="10" r="3"/><path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 13 8 13s8-7.75 8-13a8 8 0 0 0-8-8z"/></svg>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="10" r="3"/><path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 13 8 13s8-7.75 8-13a8 8 0 0 0-8-8z"/></svg>
         Live Map
+      </button>
+      <button class="header-btn primary" onclick="showToast('Fleet data synced ✓')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="23 4 12 15 9 12"/><path d="M12 21a9 9 0 1 0-9-9"/></svg>
+        Sync
       </button>
     </div>
   </header>
@@ -71,6 +89,8 @@
     <div class="kpi-item"><span class="kpi-value red" id="kpi-attention">0</span><span class="kpi-label">Need<br>Attention</span></div>
     <div class="kpi-item"><span class="kpi-value neon" id="kpi-tracked">0</span><span class="kpi-label">Tracked<br>Live</span></div>
     <div class="kpi-item"><span class="kpi-value green" id="kpi-moving">0</span><span class="kpi-label">Moving<br>Now</span></div>
+    <div class="kpi-item"><span class="kpi-value amber" id="kpi-due7">0</span><span class="kpi-label">Due in<br>7 Days</span></div>
+    <div class="kpi-item"><span class="kpi-value" id="kpi-due30">0</span><span class="kpi-label">Due in<br>30 Days</span></div>
     <div class="kpi-item"><span class="kpi-value red" id="kpi-missing-insurance">0</span><span class="kpi-label">Missing<br>Insurance</span></div>
     <div class="kpi-item"><span class="kpi-value" id="kpi-taxi">0</span><span class="kpi-label">Taxi<br>Licensed</span></div>
     <div class="kpi-item"><span class="kpi-value amber" id="kpi-missing-dates">0</span><span class="kpi-label">Missing<br>Dates</span></div>
@@ -80,11 +100,12 @@
   <div class="filter-bar" id="filter-bar">
     <span class="filter-label">Filter</span>
     <button class="filter-btn active" data-filter="all" onclick="setFilter('all')">All</button>
-    <button class="filter-btn" data-filter="overdue" onclick="setFilter('overdue')">Overdue</button>
-    <button class="filter-btn" data-filter="urgent" onclick="setFilter('urgent')">Needs Action</button>
+    <button class="filter-btn red-active" data-filter="overdue" onclick="setFilter('overdue')">⚠ Overdue</button>
+    <button class="filter-btn red-active" data-filter="urgent" onclick="setFilter('urgent')">Needs Action</button>
     <button class="filter-btn" data-filter="noinsurance" onclick="setFilter('noinsurance')">No Insurance</button>
-    <button class="filter-btn" data-filter="tracked" onclick="setFilter('tracked')">Tracked</button>
-    <button class="filter-btn" data-filter="moving" onclick="setFilter('moving')">Moving Now</button>
+    <button class="filter-btn green-active" data-filter="tracked" onclick="setFilter('tracked')">Tracked</button>
+    <button class="filter-btn green-active" data-filter="moving" onclick="setFilter('moving')">Moving Now</button>
+    <span style="margin-left:auto;font-size:11px;color:var(--text-dim)" id="result-count"></span>
   </div>
 
   <!-- Vehicle Grid -->
@@ -100,17 +121,22 @@
 <div class="map-overlay" id="map-overlay">
   <div class="map-header">
     <h2>📍 Fleet Map</h2>
-    <span style="font-size:13px;color:var(--text-dim)" id="map-summary">6 tracked · 2 moving</span>
+    <span style="font-size:12px;color:var(--text-dim)" id="map-summary">6 tracked · Moving now</span>
     <button class="map-close-btn" onclick="closeMap()">Close Map</button>
   </div>
   <div class="map-container" id="map-container">
     <div class="map-placeholder">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="10" r="3"/><path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 13 8 13s8-7.75 8-13a8 8 0 0 0-8-8z"/></svg>
-      <p>OpenStreetMap embed goes here</p>
-      <p style="font-size:12px;margin-top:8px;opacity:0.6">6 vehicles with live GPS positions</p>
+      <p>OpenStreetMap embed</p>
+      <p style="font-size:11px;margin-top:6px;opacity:0.5">Click a vehicle card to open details</p>
     </div>
     <div class="map-vehicles" id="map-vehicles"></div>
   </div>
+</div>
+
+<!-- ── Modals ── -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal" id="modal"></div>
 </div>
 
 <!-- ── Toast ── -->
@@ -123,290 +149,534 @@ let currentFilter = 'all';
 let currentView = 'fleet';
 let selectedVehicleId = null;
 let filteredData = [...FLEET_DATA];
+let panelTab = 'overview';
+let currentVehicle = null;
 
-// ── Render Fleet ──
+// ── Colour helpers ──
+const COLOUR_MAP = {
+  'Red':'#ff3355','Blue':'#4488ff','Black':'#222233','White':'#e8edf5',
+  'Maroon':'#882222','Green':'#00ff88','Silver':'#aab0c0','Grey':'#667080'
+};
+
+const COLOUR_DOT_CLASS = {
+  'Red':'red','Blue':'neon','Black':'dim','White':'',
+  'Maroon':'red','Green':'green','Silver':'dim','Grey':'dim'
+};
+
+// ── renderFleet() ──
 function renderFleet() {
   const grid = document.getElementById('vehicle-grid');
-  const kpis = computeKPIs();
-
-  // Update KPIs
-  document.getElementById('kpi-attention').textContent = kpis.needsAttention;
-  document.getElementById('kpi-tracked').textContent = kpis.tracked;
-  document.getElementById('kpi-moving').textContent = kpis.moving;
-  document.getElementById('kpi-missing-insurance').textContent = kpis.missingInsurance;
-  document.getElementById('kpi-taxi').textContent = kpis.taxiLicensed;
-  document.getElementById('kpi-missing-dates').textContent = kpis.missingDates;
-
-  // Update nav counts
-  document.getElementById('fleet-count').textContent = kpis.total;
-  document.getElementById('map-count').textContent = kpis.tracked;
-  document.getElementById('needs-count').textContent = kpis.needsAttention;
-  document.getElementById('tracked-count').textContent = kpis.tracked;
-
-  // Update zero states
-  document.querySelectorAll('.kpi-value').forEach(el => {
-    if (el.textContent === '0') el.style.opacity = '0.4';
-    else el.style.opacity = '1';
-  });
-
-  // Filter
+  if (!grid) return;
+  const query = (document.getElementById('search-input')?.value || '').toLowerCase();
   filteredData = FLEET_DATA.filter(v => {
+    if (currentFilter === 'all') return true;
     if (currentFilter === 'overdue') return v.issues && v.issues.length > 0;
-    if (currentFilter === 'urgent') return v.issues && v.issues.length > 0;
+    if (currentFilter === 'urgent') return (v.issues || []).length > 0;
     if (currentFilter === 'noinsurance') return !v.insurance;
-    if (currentFilter === 'tracked') return v.tracker_id;
+    if (currentFilter === 'tracked') return !!v.tracker_id;
     if (currentFilter === 'moving') return v.tracker_status && v.tracker_status.toLowerCase().includes('moving');
     return true;
+  }).filter(v => {
+    if (!query) return true;
+    const q = query;
+    const reg = (v.reg || '').toLowerCase();
+    const make = (v.make || '').toLowerCase();
+    const model = (v.model || '').toLowerCase();
+    const driver = (v.driver || '').toLowerCase();
+    return reg.includes(q) || make.includes(q) || model.includes(q) || driver.includes(q);
   });
-
-  // Search
-  const q = document.getElementById('search-input').value.toLowerCase().trim();
-  if (q) {
-    filteredData = filteredData.filter(v =>
-      v.reg.toLowerCase().includes(q) ||
-      v.make.toLowerCase().includes(q) ||
-      v.model.toLowerCase().includes(q) ||
-      (v.driver && v.driver.toLowerCase().includes(q))
-    );
-  }
-
-  // Apply view filter
-  if (currentView === 'needs') {
-    filteredData = filteredData.filter(v => v.issues && v.issues.length > 0);
-  } else if (currentView === 'tracked') {
-    filteredData = filteredData.filter(v => v.tracker_id);
-  }
-
-  grid.innerHTML = '';
-
   if (filteredData.length === 0) {
-    grid.innerHTML = `<div class="empty-state">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
-      <p>No vehicles match this filter</p>
-    </div>`;
-    return;
+    grid.innerHTML = `<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg><p>No vehicles match your filters</p></div>`;
+  } else {
+    grid.innerHTML = filteredData.map(v => renderCard(v)).join('');
   }
-
-  filteredData.forEach(v => {
-    const urgClass = urgencyClass(v);
-    const card = document.createElement('div');
-    card.className = `vehicle-card ${urgClass}${v.tracker_id ? ' tracked' : ''}${selectedVehicleId === v.id ? ' selected' : ''}`;
-    card.dataset.id = v.id;
-    card.onclick = () => openPanel(v.id);
-
-    const motDays = daysUntil(v.mot);
-    const taxDays = daysUntil(v.tax);
-
-    card.innerHTML = `
-      <div class="card-top">
-        <div>
-          <div class="card-reg">${v.reg}</div>
-          <div class="card-model">${v.year ? `${v.year} ` : ''}${v.make} ${v.model}${v.colour ? ` · ${v.colour}` : ''}</div>
-          <div class="card-meta">
-            <span>${v.company}</span>
-            ${v.driver ? `<span>👤 ${v.driver}</span>` : ''}
-            ${v.tracker_id ? `<span style="color:var(--neon)">● Live</span>` : ''}
-          </div>
-        </div>
-        <span class="avail-badge ${availClass(v.availability)}">${v.availability}</span>
-      </div>
-      <div class="card-status">
-        ${!v.insurance ? '<span class="status-item red"><span class="status-dot red"></span>No Insurance</span>' : `<span class="status-item green"><span class="status-dot green"></span>Insured</span>`}
-        <span class="status-item ${statusClass(v.mot)}"><span class="status-dot ${statusClass(v.mot)}"></span>MOT ${v.mot ? new Date(v.mot).toLocaleDateString('en-GB',{day:'numeric',month:'short'}) : '—'}</span>
-        <span class="status-item ${statusClass(v.tax)}"><span class="status-dot ${statusClass(v.tax)}"></span>Tax ${v.tax ? new Date(v.tax).toLocaleDateString('en-GB',{day:'numeric',month:'short'}) : '—'}</span>
-        ${v.taxi ? `<span class="status-item ${v.taxi === 'Licensed' ? 'green' : v.taxi === 'Unknown' ? 'dim' : 'amber'}"><span class="status-dot ${v.taxi === 'Licensed' ? 'green' : v.taxi === 'Unknown' ? 'dim' : 'amber'}"></span>${v.taxi}</span>` : ''}
-        ${v.tracker_status ? `<span class="status-item neon"><span class="status-dot neon"></span>${v.tracker_status.split('/')[0].trim()}</span>` : ''}
-      </div>
-    `;
-    grid.appendChild(card);
-  });
+  document.getElementById('result-count').textContent = `${filteredData.length} vehicle${filteredData.length !== 1 ? 's' : ''}`;
+  updateKPIs();
+  updateNavCounts();
+  updateViewSubtitle();
 }
 
-// ── Side Panel ──
+function renderCard(v) {
+  const urg = urgencyClass(v);
+  const hasTracker = !!v.tracker_id || !!v.tracker_label;
+  const moving = v.tracker_status && v.tracker_status.toLowerCase().includes('moving');
+  const colourDot = v.colour ? `<span class="panel-colour" style="background:${COLOUR_MAP[v.colour] || '#667080'}"></span>` : '';
+  const issuesHtml = (v.issues || []).map(i => {
+    const cls = i.includes('missing') || i.includes('overdue') ? 'issue-red' : 'issue-amber';
+    return `<span class="card-issue ${cls}">${i}</span>`;
+  }).join('');
+  const motC = statusClass(v.mot);
+  const taxC = statusClass(v.tax);
+  const insC = statusClass(v.insurance_expiry);
+  const trak = hasTracker ? `<span class="tracker-dot ${moving ? 'on' : 'on'}" style="background:${moving ? 'var(--green)' : 'var(--text-dim)'};opacity:${moving ? 1 : 0.3}"></span>` : '';
+  return `<div class="vehicle-card ${urg} ${hasTracker ? 'tracked-card' : ''}${selectedVehicleId === v.id ? ' selected' : ''}" onclick="openPanel(${v.id})">
+    <div class="card-top">
+      <div><span class="card-reg">${v.reg}${trak}</span>
+      <div class="card-model">${v.make} ${v.model}${v.year ? ' · ' + v.year : ''}${colourDot}</div></div>
+      <span class="avail-badge ${availClass(v.availability)}">${v.availability}</span>
+    </div>
+    <div class="card-meta">
+      <span>🏢 ${v.company}</span>
+      ${v.driver ? `<span>👤 ${v.driver}</span>` : ''}
+      ${v.tracker_label ? `<span>📡 ${v.tracker_label}</span>` : ''}
+    </div>
+    <div class="card-status">
+      <span class="status-item ${motC}"><span class="status-dot ${motC}"></span>MOT</span>
+      <span class="status-item ${taxC}"><span class="status-dot ${taxC}"></span>Tax</span>
+      <span class="status-item ${insC}"><span class="status-dot ${insC}"></span>Ins</span>
+      ${v.taxi_expiry ? `<span class="status-item ${statusClass(v.taxi_expiry)}"><span class="status-dot ${statusClass(v.taxi_expiry)}"></span>Taxi</span>` : ''}
+    </div>
+    ${issuesHtml ? `<div class="card-issues">${issuesHtml}</div>` : ''}
+  </div>`;
+}
+
+function updateKPIs() {
+  const k = computeKPIs();
+  const set = (id, val, cls) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = val;
+    if (cls) { el.className = 'kpi-value ' + cls; }
+  };
+  set('kpi-attention', k.needsAttention, 'red');
+  set('kpi-tracked', k.tracked, 'neon');
+  set('kpi-moving', k.moving, 'green');
+  set('kpi-due7', k.due7, 'amber');
+  set('kpi-due30', k.due30, '');
+  set('kpi-missing-insurance', k.missingInsurance, 'red');
+  set('kpi-taxi', k.taxiLicensed, '');
+  set('kpi-missing-dates', k.missingDates, 'amber');
+}
+
+function updateNavCounts() {
+  const total = FLEET_DATA.length;
+  const tracked = FLEET_DATA.filter(v => v.tracker_id).length;
+  const moving = FLEET_DATA.filter(v => v.tracker_status && v.tracker_status.toLowerCase().includes('moving')).length;
+  const needs = FLEET_DATA.filter(v => v.issues && v.issues.length > 0).length;
+  const noins = FLEET_DATA.filter(v => !v.insurance).length;
+  document.getElementById('fleet-count').textContent = total;
+  document.getElementById('live-count').textContent = tracked;
+  document.getElementById('moving-count').textContent = moving;
+  document.getElementById('needs-count').textContent = needs;
+  document.getElementById('noins-count').textContent = noins;
+}
+
+function updateViewSubtitle() {
+  const total = FLEET_DATA.length;
+  const tracked = FLEET_DATA.filter(v => v.tracker_id).length;
+  const moving = FLEET_DATA.filter(v => v.tracker_status && v.tracker_status.toLowerCase().includes('moving')).length;
+  const subtitles = {
+    'fleet': `All ${total} vehicles · ${tracked} tracked live`,
+    'tracked': `${tracked} vehicles with live trackers`,
+    'moving': `${moving} vehicles moving now`,
+    'attention': `${FLEET_DATA.filter(v => v.issues && v.issues.length > 0).length} vehicles need attention`,
+    'noinsurance': `${FLEET_DATA.filter(v => !v.insurance).length} vehicles without insurance`
+  };
+  const titles = {
+    'fleet': 'Fleet Overview',
+    'tracked': 'Live Tracking',
+    'moving': 'Moving Now',
+    'attention': 'Needs Attention',
+    'noinsurance': 'No Insurance'
+  };
+  document.getElementById('view-title').textContent = titles[currentView] || 'Fleet Overview';
+  document.getElementById('view-subtitle').textContent = subtitles[currentView] || '';
+}
+
+// ── openPanel(id) ──
 function openPanel(id) {
-  selectedVehicleId = id;
   const v = FLEET_DATA.find(x => x.id === id);
   if (!v) return;
-
-  renderFleet(); // re-render to show selected state
-
+  currentVehicle = v;
+  selectedVehicleId = id;
+  panelTab = 'overview';
+  // Update card selection
+  document.querySelectorAll('.vehicle-card').forEach(c => c.classList.remove('selected'));
+  const card = document.querySelector(`.vehicle-card:nth-child(${FLEET_DATA.indexOf(v) + 1})`);
+  if (card) card.classList.add('selected');
   const panel = document.getElementById('vehicle-panel');
   const overlay = document.getElementById('panel-overlay');
-  overlay.classList.add('open');
-  panel.classList.add('open');
-
-  const motDays = daysUntil(v.mot);
-  const taxDays = daysUntil(v.tax);
-  const insDays = daysUntil(v.insurance_expiry);
-
-  panel.innerHTML = `
+  if (!panel || !overlay) return;
+  const colourDot = v.colour ? `<span class="panel-colour" style="background:${COLOUR_MAP[v.colour] || '#667080'}"></span>` : '';
+  const headerHtml = `
     <div class="panel-header">
       <div>
-        <div class="panel-reg">${v.reg}</div>
-        <div class="panel-model">${v.make} ${v.model}${v.colour ? ` <span class="panel-colour" style="background:${v.colour.toLowerCase()}"></span>` : ''}</div>
+        <div class="panel-reg">${v.reg}${colourDot}</div>
+        <div class="panel-model">${v.make} ${v.model}${v.year ? ' · ' + v.year : ''}</div>
+        <div class="panel-header-meta">
+          <span class="avail-badge ${availClass(v.availability)}">${v.availability}</span>
+          <span style="font-size:11px;color:var(--text-dim)">🏢 ${v.company}</span>
+          ${v.driver ? `<span style="font-size:11px;color:var(--text-dim)">👤 ${v.driver}</span>` : ''}
+        </div>
       </div>
       <button class="panel-close" onclick="closePanel()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
     </div>
-    <div class="panel-body">
-      <!-- Availability + Driver -->
-      <div class="panel-section">
-        <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
-          <span class="avail-badge ${availClass(v.availability)}" style="font-size:11px">${v.availability}</span>
-          <span style="font-size:12px;color:var(--text-dim)">${v.company}</span>
-          ${v.driver ? `<span style="font-size:12px;color:var(--text-dim)">👤 ${v.driver}</span>` : '<span style="font-size:12px;color:var(--text-dim)">👤 Unassigned</span>'}
-        </div>
-        ${v.nickname ? `<div style="font-size:12px;color:var(--text-dim);margin-bottom:6px">"${v.nickname}"</div>` : ''}
+    <div class="tab-bar">
+      <button class="tab-btn active" data-tab="overview" onclick="switchPanelTab('overview')">Overview</button>
+      <button class="tab-btn" data-tab="timeline" onclick="switchPanelTab('timeline')">Timeline</button>
+      <button class="tab-btn" data-tab="history" onclick="switchPanelTab('history')">History</button>
+      <button class="tab-btn" data-tab="driver" onclick="switchPanelTab('driver')">Driver</button>
+    </div>`;
+  panel.innerHTML = headerHtml + `<div class="panel-body" id="panel-body">${renderPanelTab('overview', v)}</div>`;
+  panel.classList.add('open');
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function switchPanelTab(tab) {
+  panelTab = tab;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+  const body = document.getElementById('panel-body');
+  if (body && currentVehicle) body.innerHTML = renderPanelTab(tab, currentVehicle);
+}
+
+function renderPanelTab(tab, v) {
+  if (tab === 'overview') return renderOverviewTab(v);
+  if (tab === 'timeline') return renderTimelineTab(v);
+  if (tab === 'history') return renderHistoryTab(v);
+  if (tab === 'driver') return renderDriverTab(v);
+  return '';
+}
+
+function renderOverviewTab(v) {
+  const motC = statusClass(v.mot, 60, 30);
+  const taxC = statusClass(v.tax, 60, 30);
+  const insC = statusClass(v.insurance_expiry, 60, 30);
+  const taxiC = v.taxi_expiry ? statusClass(v.taxi_expiry, 60, 30) : 'dim';
+  const pcoC = v.driver_pco_expiry ? statusClass(v.driver_pco_expiry, 60, 30) : 'dim';
+  const svcC = v.service_due ? statusClass(v.service_due, 60, 30) : 'dim';
+
+  const compGrid = `
+    <div class="panel-section">
+      <div class="panel-section-title">Compliance</div>
+      <div class="compliance-grid">
+        <div class="comp-item ${motC}"><div class="comp-label">MOT</div><div class="comp-status">${v.mot_status || '—'}</div><div class="comp-date">${formatDate(v.mot)}</div></div>
+        <div class="comp-item ${taxC}"><div class="comp-label">Tax</div><div class="comp-status">${v.tax_status || '—'}</div><div class="comp-date">${formatDate(v.tax)}</div></div>
+        <div class="comp-item ${insC}"><div class="comp-label">Insurance</div><div class="comp-status">${v.insurance || '—'}</div><div class="comp-date">${formatDate(v.insurance_expiry)}</div></div>
+        <div class="comp-item ${taxiC}"><div class="comp-label">Taxi</div><div class="comp-status">${v.taxi || '—'}</div><div class="comp-date">${formatDate(v.taxi_expiry)}</div></div>
+        <div class="comp-item ${pcoC}"><div class="comp-label">PCO</div><div class="comp-status">${v.driver_pco || (v.pco || '—')}</div><div class="comp-date">${formatDate(v.driver_pco_expiry || v.pco_expiry)}</div></div>
+        <div class="comp-item ${svcC}"><div class="comp-label">Service</div><div class="comp-status">${v.service || '—'}</div><div class="comp-date">${formatDate(v.service_due)}</div></div>
       </div>
+    </div>`;
 
-      <!-- Compliance Grid -->
-      <div class="panel-section">
-        <div class="panel-section-title">Compliance</div>
-        <div class="compliance-grid">
-          <div class="comp-item ${statusClass(v.mot)}">
-            <div class="comp-label">MOT</div>
-            <div class="comp-status">${v.mot_status || '—'}</div>
-            <div class="comp-date">${v.mot ? new Date(v.mot).toLocaleDateString('en-GB') : 'No date'}</div>
-          </div>
-          <div class="comp-item ${statusClass(v.tax)}">
-            <div class="comp-label">Road Tax</div>
-            <div class="comp-status">${v.tax_status || '—'}</div>
-            <div class="comp-date">${v.tax ? new Date(v.tax).toLocaleDateString('en-GB') : 'No date'}</div>
-          </div>
-          <div class="comp-item ${!v.insurance ? 'red' : statusClass(v.insurance_expiry, 60, 30)}">
-            <div class="comp-label">Insurance</div>
-            <div class="comp-status">${v.insurance || 'NONE'}</div>
-            <div class="comp-date">${v.insurance_expiry ? new Date(v.insurance_expiry).toLocaleDateString('en-GB') : '—'}</div>
-          </div>
-          <div class="comp-item ${v.taxi === 'Licensed' ? 'green' : v.taxi === 'Unknown' || !v.taxi ? 'dim' : 'amber'}">
-            <div class="comp-label">Taxi Licence</div>
-            <div class="comp-status">${v.taxi || 'Not set'}</div>
-            <div class="comp-date">${v.taxi_council ? v.taxi_council : v.taxi_expiry ? new Date(v.taxi_expiry).toLocaleDateString('en-GB') : '—'}</div>
-          </div>
-          <div class="comp-item ${!v.pco && v.issues?.some(i => i.includes('PCO')) ? 'red' : v.pco ? 'green' : 'dim'}">
-            <div class="comp-label">PCO</div>
-            <div class="comp-status">${v.pco ? 'Held' : v.issues?.some(i => i.includes('PCO')) ? 'Missing' : '—'}</div>
-            <div class="comp-date">${v.pco_expiry ? new Date(v.pco_expiry).toLocaleDateString('en-GB') : '—'}</div>
-          </div>
-          <div class="comp-item ${v.service_due ? statusClass(v.service_due, 60, 30) : 'dim'}">
-            <div class="comp-label">Service</div>
-            <div class="comp-status">${v.service || '—'}</div>
-            <div class="comp-date">${v.service_due ? new Date(v.service_due).toLocaleDateString('en-GB') : '—'}</div>
-          </div>
-        </div>
+  const locationHtml = v.tracker_pos ? `
+    <div class="panel-section">
+      <div class="panel-section-title">📍 Location</div>
+      <div class="panel-row"><span class="label">Tracker</span><span class="value">${v.tracker_label || '—'}</span></div>
+      <div class="panel-row"><span class="label">Status</span><span class="value">${v.tracker_status || '—'}</span></div>
+      <div class="panel-row"><span class="label">Coordinates</span><span class="value">${v.tracker_pos.lat.toFixed(4)}, ${v.tracker_pos.lng.toFixed(4)}</span></div>
+      ${v.tracker_speed !== undefined && v.tracker_speed !== null ? `<div class="panel-row"><span class="label">Speed</span><span class="value">${v.tracker_speed} km/h</span></div>` : ''}
+      ${v.tracker_signal !== undefined && v.tracker_signal !== null ? `<div class="panel-row"><span class="label">Signal</span><span class="value">${v.tracker_signal}%</span></div>` : ''}
+      ${v.tracker_battery !== undefined && v.tracker_battery !== null ? `<div class="panel-row"><span class="label">Battery</span><span class="value">${v.tracker_battery}%</span></div>` : ''}
+      <div class="panel-row"><span class="label">Carrier</span><span class="value">${v.tracker_carrier || '—'}</span></div>
+    </div>` : '';
+
+  const issuesHtml = (v.issues || []).length > 0 ? `
+    <div class="panel-section">
+      <div class="panel-section-title">⚠ Issues</div>
+      ${(v.issues || []).map(i => `<div class="panel-row"><span class="label" style="color:var(--red)">${i}</span></div>`).join('')}
+    </div>` : '';
+
+  const qaHtml = `
+    <div class="panel-section">
+      <div class="panel-section-title">Quick Actions</div>
+      <div class="quick-actions">
+        <button class="qa-btn green" onclick="setAvailable(currentVehicle)">✓ Set Available</button>
+        <button class="qa-btn primary" onclick="rentOutModal(currentVehicle)">🔄 Rent Out</button>
+        <button class="qa-btn red" onclick="logDefectModal(currentVehicle)">⚠ Log Defect</button>
+        <button class="qa-btn" style="color:var(--amber)" onclick="scheduleServiceModal(currentVehicle)">🔧 Schedule Service</button>
       </div>
+    </div>`;
 
-      <!-- Location -->
-      ${v.tracker_pos ? `
-      <div class="panel-section">
-        <div class="panel-section-title">📍 Location</div>
-        <div class="panel-row"><span class="label">Status</span><span class="value">${v.tracker_status}</span></div>
-        <div class="panel-row"><span class="label">Position</span><span class="value">${v.tracker_pos.lat.toFixed(4)}, ${v.tracker_pos.lng.toFixed(4)}</span></div>
-        ${v.tracker_signal ? `<div class="panel-row"><span class="label">Signal</span><span class="value" style="color:${v.tracker_signal > 50 ? 'var(--green)' : 'var(--amber)'}">${v.tracker_signal}%</span></div>` : ''}
-        ${v.tracker_battery ? `<div class="panel-row"><span class="label">Battery</span><span class="value" style="color:${v.tracker_battery > 50 ? 'var(--green)' : 'var(--amber)'}">${v.tracker_battery}%</span></div>` : ''}
-        <div style="margin-top:8px">
-          <a href="https://www.openstreetmap.org/?mlat=${v.tracker_pos.lat}&mlon=${v.tracker_pos.lng}&zoom=15" target="_blank" style="font-size:12px;color:var(--neon)">Open in OpenStreetMap →</a>
-        </div>
-      </div>` : ''}
+  return compGrid + locationHtml + issuesHtml + qaHtml;
+}
 
-      <!-- Issues -->
-      ${v.issues && v.issues.length > 0 ? `
-      <div class="panel-section">
-        <div class="panel-section-title" style="color:var(--red)">⚠ Issues</div>
-        ${v.issues.map(i => `<div style="padding:6px 0;font-size:13px;color:var(--red);display:flex;align-items:center;gap:8px"><span class="status-dot red"></span>${i}</div>`).join('')}
-      </div>` : ''}
+function renderTimelineTab(v) {
+  const entries = v.timeline || [];
+  if (entries.length === 0) {
+    return `<div class="panel-section"><div style="text-align:center;padding:20px;color:var(--text-dim);font-size:12px">No timeline entries yet</div></div>`;
+  }
+  const typeClass = {
+    'vehicle_added':'tl-system','auto_refresh':'tl-refresh','driver_assigned':'tl-driver',
+    'rental_started':'tl-rental','rental_ended':'tl-rental','defect_logged':'tl-defect',
+    'service_scheduled':'tl-service','service_completed':'tl-service'
+  };
+  const items = entries.sort((a,b) => new Date(b.date) - new Date(a.date)).map(e => {
+    const cls = typeClass[e.type] || 'tl-system';
+    return `<div class="tl-item ${cls}">
+      <div class="tl-time">${formatDate(e.date)} ${formatTime(e.date)}</div>
+      <div class="tl-text">${e.text}</div>
+      ${e.details ? `<div class="tl-sub">${e.details}</div>` : ''}
+    </div>`;
+  }).join('');
+  return `<div class="panel-section"><div class="timeline">${items}</div></div>`;
+}
 
-      <!-- Quick Actions -->
-      <div class="panel-section">
-        <div class="panel-section-title">Quick Actions</div>
-        <div class="quick-actions">
-          <button class="qa-btn primary" onclick="showToast('Status updated to Available ✓')">✅ Set Available</button>
-          <button class="qa-btn" onclick="showToast('Rental checkout form opened')">📋 Rent Out</button>
-          <button class="qa-btn" onclick="showToast('Defect log form opened')">🔧 Log Defect</button>
-          <button class="qa-btn danger" onclick="showToast('Vehicle flagged for service')">⏰ Schedule Service</button>
-          <button class="qa-btn" onclick="window.open('https://fleet.arma-hire.co.uk/index.php?page=vehicle&id=${v.id}','_blank')">📄 Full Details</button>
-        </div>
+function renderHistoryTab(v) {
+  const rentals = v.rentals || [];
+  const defects = v.defects || [];
+  let html = '';
+
+  // Render rentals
+  const now = new Date();
+  const activeRentals = rentals.filter(r => { const s = new Date(r.start); const e = r.end ? new Date(r.end) : null; return s <= now && (!e || e >= now); });
+  const pastRentals = rentals.filter(r => r.end && new Date(r.end) < now);
+  const futureRentals = rentals.filter(r => new Date(r.start) > now);
+
+  const renderRental = (r, cls, badgeCls, badgeText) => `
+    <div class="rental-item ${cls}">
+      <div class="rental-head">
+        <span>${r.driver || 'Unknown driver'}</span>
+        <span class="rental-badge ${badgeCls}">${badgeText}</span>
       </div>
-
-      <!-- Rental History -->
-      <div class="panel-section">
-        <div class="panel-section-title">Rental History</div>
-        ${v.rentals && v.rentals.length > 0 ? v.rentals.map(r => `
-          <div class="panel-row"><span class="label">${r.renter}</span><span class="value">${r.checkout} → ${r.checkin || 'ongoing'}</span></div>
-        `).join('') : '<div style="font-size:13px;color:var(--text-dim)">No past rentals</div>'}
+      <div class="rental-details">
+        <span>${formatDate(r.start)} → ${formatDate(r.end) || 'Ongoing'}</span>
+        ${r.ref ? `<span>Ref: ${r.ref}</span>` : ''}
       </div>
-    </div>
-  `;
+    </div>`;
+
+  if (rentals.length > 0) {
+    html += `<div class="panel-section"><div class="panel-section-title">Rental History</div>`;
+    activeRentals.forEach(r => html += renderRental(r, 'active', 'active-badge', 'Active'));
+    futureRentals.forEach(r => html += renderRental(r, 'future', 'future-badge', 'Scheduled'));
+    pastRentals.forEach(r => html += renderRental(r, '', 'past-badge', 'Past'));
+    html += `</div>`;
+  } else {
+    html += `<div class="panel-section"><div class="panel-section-title">Rental History</div><div style="text-align:center;padding:12px;color:var(--text-dim);font-size:11px">No rental history</div></div>`;
+  }
+
+  // Defect log
+  if (defects.length > 0) {
+    html += `<div class="panel-section"><div class="panel-section-title">Defect Log</div>`;
+    defects.forEach(d => {
+      const sevCls = d.severity === 'critical' ? 'red' : d.severity === 'major' ? 'amber' : 'dim';
+      html += `<div class="panel-row"><span class="label">${d.title || d.issue || 'Defect'}</span><span class="value" style="color:var(--${sevCls})">${d.severity || '—'}</span></div>`;
+    });
+    html += `</div>`;
+  }
+
+  // Service records
+  if (v.service) {
+    html += `<div class="panel-section"><div class="panel-section-title">Service Records</div>`;
+    html += `<div class="panel-row"><span class="label">Last Service</span><span class="value">${v.service}</span></div>`;
+    if (v.service_due) html += `<div class="panel-row"><span class="label">Due</span><span class="value">${formatDate(v.service_due)}</span></div>`;
+    html += `</div>`;
+  }
+
+  return html;
+}
+
+function renderDriverTab(v) {
+  const hasDriver = !!v.driver;
+  if (!hasDriver) {
+    return `<div class="panel-section"><div style="text-align:center;padding:20px;color:var(--text-dim);font-size:12px">No driver assigned</div></div>`;
+  }
+  const pcoC = v.driver_pco_expiry ? statusClass(v.driver_pco_expiry, 60, 30) : 'dim';
+  return `
+    <div class="panel-section">
+      <div class="panel-section-title">Driver Details</div>
+      <div class="panel-row"><span class="label">Name</span><span class="value">${v.driver || '—'}</span></div>
+      <div class="panel-row"><span class="label">Phone</span><span class="value">${v.driver_phone || '—'}</span></div>
+      <div class="panel-row"><span class="label">PCO Status</span><span class="value" style="color:var(--${pcoC})">${v.driver_pco || v.pco || '—'}</span></div>
+      <div class="panel-row"><span class="label">PCO Expiry</span><span class="value">${formatDate(v.driver_pco_expiry || v.pco_expiry)}</span></div>
+      <div class="panel-row"><span class="label">Hire Start</span><span class="value">${formatDate(v.driver_hire_start)}</span></div>
+      <div class="panel-row"><span class="label">Hire End</span><span class="value">${formatDate(v.driver_hire_end)}</span></div>
+    </div>`;
 }
 
 function closePanel() {
+  const panel = document.getElementById('vehicle-panel');
+  const overlay = document.getElementById('panel-overlay');
+  if (panel) panel.classList.remove('open');
+  if (overlay) overlay.classList.remove('open');
+  document.body.style.overflow = '';
   selectedVehicleId = null;
-  document.getElementById('vehicle-panel').classList.remove('open');
-  document.getElementById('panel-overlay').classList.remove('open');
+  currentVehicle = null;
+  document.querySelectorAll('.vehicle-card').forEach(c => c.classList.remove('selected'));
+}
+
+// ── Modals ──
+function showModal(title, formHtml) {
+  const overlay = document.getElementById('modal-overlay');
+  const modal = document.getElementById('modal');
+  if (!overlay || !modal) return;
+  modal.innerHTML = `<h2>${title}</h2>${formHtml}`;
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  // Hide side panel and map when modal opens
+  document.getElementById('vehicle-panel')?.classList.remove('open');
+  document.getElementById('panel-overlay')?.classList.remove('open');
+  document.getElementById('map-overlay')?.classList.remove('open');
+}
+
+function closeModal(event) {
+  if (event && event.target && event.target !== document.getElementById('modal-overlay') && !event.target.closest('.modal-btn')) return;
+  document.getElementById('modal-overlay')?.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function rentOutModal(v) {
+  currentVehicle = v;
+  showModal('🔄 Rent Out — ' + v.reg, `
+    <div class="panel-form">
+      <div class="form-group"><label>Driver Name</label><input type="text" id="ro-driver" placeholder="Full name"></div>
+      <div class="form-group"><label>Phone</label><input type="tel" id="ro-phone" placeholder="07..."></div>
+      <div class="form-group"><label>Reference</label><input type="text" id="ro-ref" placeholder="Booking ref / invoice no."></div>
+      <div class="form-row">
+        <div class="form-group"><label>Mileage</label><input type="number" id="ro-mileage" placeholder="Current miles"></div>
+        <div class="form-group"><label>Fuel Level</label><input type="text" id="ro-fuel" placeholder="e.g. Full / ¾"></div>
+      </div>
+      <div class="form-group"><label>Notes</label><textarea id="ro-notes" rows="3" placeholder="Any notes..."></textarea></div>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-btn" onclick="closeModal({target:document.getElementById('modal-overlay')})">Cancel</button>
+      <button class="modal-btn primary" onclick="confirmRentOut(currentVehicle)">Confirm Rent Out</button>
+    </div>`);
+}
+
+function confirmRentOut(v) {
+  const driver = document.getElementById('ro-driver')?.value;
+  const phone = document.getElementById('ro-phone')?.value;
+  const ref = document.getElementById('ro-ref')?.value;
+  v.availability = "Rented out";
+  v.driver = driver || 'New driver';
+  v.driver_phone = phone || '';
+  showToast(`✅ ${v.reg} rented out to ${driver || 'driver'}`);
+  closeModal({target:document.getElementById('modal-overlay')});
+  closePanel();
   renderFleet();
 }
 
-// ── Map ──
+function logDefectModal(v) {
+  currentVehicle = v;
+  showModal('⚠ Log Defect — ' + v.reg,
+    '<div class="panel-form">' +
+    '<div class="form-row">' +
+    '<div class="form-group"><label>Issue Type</label><select id="ld-type"><option value="defect">Defect</option><option value="damage">Damage</option></select></div>' +
+    '<div class="form-group"><label>Severity</label><select id="ld-severity"><option value="minor">Minor</option><option value="major">Major</option><option value="critical">Critical</option></select></div>' +
+    '</div>' +
+    '<div class="form-group"><label>Title</label><input type="text" id="ld-title" placeholder="e.g. Cracked windscreen"></div>' +
+    '<div class="form-group"><label>Details</label><textarea id="ld-details" rows="3" placeholder="Describe the issue..."></textarea></div>' +
+    '<div class="form-group"><label>Estimated Cost</label><input type="text" id="ld-cost" placeholder="£0.00"></div>' +
+    '</div>' +
+    '<div class="modal-actions">' +
+    '<button class="modal-btn" onclick="closeModal({target:document.getElementById(\'modal-overlay\')})">Cancel</button>' +
+    '<button class="modal-btn red-btn" onclick="confirmLogDefect(currentVehicle)">Log Defect</button>' +
+    '</div>');
+}
+
+function confirmLogDefect(v) {
+  const title = document.getElementById('ld-title')?.value || 'Untitled';
+  v.availability = "In service";
+  showToast(`⚠ Defect logged for ${v.reg}: ${title}`);
+  closeModal({target:document.getElementById('modal-overlay')});
+  closePanel();
+  renderFleet();
+}
+
+function scheduleServiceModal(v) {
+  currentVehicle = v;
+  showModal('🔧 Schedule Service — ' + v.reg,
+    '<div class="panel-form">' +
+    '<div class="form-group"><label>Service Date</label><input type="date" id="sv-date"></div>' +
+    '<div class="form-group"><label>Current Mileage</label><input type="number" id="sv-mileage" placeholder="Mileage at service"></div>' +
+    '<div class="form-group"><label>Work Done</label><textarea id="sv-work" rows="3" placeholder="e.g. Oil change, filter replacement..."></textarea></div>' +
+    '</div>' +
+    '<div class="modal-actions">' +
+    '<button class="modal-btn" onclick="closeModal({target:document.getElementById(\'modal-overlay\')})">Cancel</button>' +
+    '<button class="modal-btn primary" onclick="confirmScheduleService(currentVehicle)">Schedule Service</button>' +
+    '</div>');
+}
+
+function confirmScheduleService(v) {
+  const date = document.getElementById('sv-date')?.value || 'soon';
+  v.availability = "In service";
+  showToast(`🔧 Service scheduled for ${v.reg} on ${date}`);
+  closeModal({target:document.getElementById('modal-overlay')});
+  closePanel();
+  renderFleet();
+}
+
+function setAvailable(v) {
+  v.availability = "Available";
+  showToast(`✅ ${v.reg} marked as Available`);
+  closePanel();
+  renderFleet();
+}
+
+// ── openMap / closeMap ──
 function openMap() {
-  document.getElementById('map-overlay').classList.add('open');
+  const overlay = document.getElementById('map-overlay');
+  if (!overlay) return;
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  const tracked = FLEET_DATA.filter(v => v.tracker_pos);
+  const moving = tracked.filter(v => v.tracker_status && v.tracker_status.toLowerCase().includes('moving'));
+  document.getElementById('map-summary').textContent = `${tracked.length} tracked · ${moving.length} moving now`;
   const container = document.getElementById('map-vehicles');
-  const tracked = FLEET_DATA.filter(v => v.tracker_id);
-  document.getElementById('map-summary').textContent = `${tracked.length} tracked · ${tracked.filter(v => v.tracker_status?.toLowerCase().includes('moving')).length} moving`;
-  container.innerHTML = tracked.map(v => `
-    <div class="map-vehicle-card" onclick="closeMap();openPanel(${v.id})" style="cursor:pointer">
-      <div class="mv-reg">${v.reg}</div>
-      <div class="mv-model">${v.make} ${v.model}</div>
-      <div class="mv-status">
-        <span class="dot ${v.tracker_status?.toLowerCase().includes('moving') ? 'moving' : v.tracker_status?.toLowerCase().includes('stop') ? 'stopped' : 'parked'}"></span>
-        ${v.tracker_status?.split('/')[0].trim() || 'Unknown'}
-        ${v.tracker_pos ? `· ${v.tracker_pos.lat.toFixed(2)}, ${v.tracker_pos.lng.toFixed(2)}` : ''}
+  if (container) {
+    container.innerHTML = tracked.map(v => `
+      <div class="map-vehicle-card" onclick="openPanel(${v.id});closeMap()">
+        <div class="mv-reg">${v.reg}</div>
+        <div class="mv-model">${v.make} ${v.model}</div>
+        <div class="mv-status">
+          <span class="status-dot ${v.tracker_status && v.tracker_status.toLowerCase().includes('moving') ? 'green' : 'dim'}"></span>
+          ${v.tracker_status || '—'}
+        </div>
       </div>
-    </div>
-  `).join('');
+    `).join('');
+  }
 }
 
 function closeMap() {
-  document.getElementById('map-overlay').classList.remove('open');
+  const overlay = document.getElementById('map-overlay');
+  if (overlay) overlay.classList.remove('open');
+  document.body.style.overflow = '';
 }
 
-// ── View Switching ──
+// ── switchView(view) ──
 function switchView(view) {
   currentView = view;
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  document.querySelector(`[data-view="${view}"]`).classList.add('active');
-  const titles = {
-    fleet: ['Fleet Overview', 'All 20 vehicles at a glance'],
-    needs: ['Needs Attention', 'Vehicles requiring action'],
-    tracked: ['Tracked Live', 'Vehicles with active GPS trackers'],
-  };
-  const [title, sub] = titles[view] || ['Fleet', ''];
-  document.getElementById('view-title').textContent = title;
-  document.getElementById('view-subtitle').textContent = sub;
-  renderFleet();
+  const navItems = document.querySelectorAll('.nav-item');
+  const idx = { 'fleet':0, 'tracked':1, 'moving':2, 'attention':3, 'noinsurance':4 };
+  const i = idx[view];
+  if (i !== undefined && navItems[i]) navItems[i].classList.add('active');
+  // Map view to filter
+  const filterMap = { 'fleet':'all', 'tracked':'tracked', 'moving':'moving', 'attention':'urgent', 'noinsurance':'noinsurance' };
+  const newFilter = filterMap[view] || 'all';
+  setFilter(newFilter);
+  updateViewSubtitle();
 }
 
-// ── Filter ──
+// ── setFilter / filterFleet ──
 function setFilter(f) {
   currentFilter = f;
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  document.querySelector(`[data-filter="${f}"]`).classList.add('active');
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b.dataset.filter === f));
   renderFleet();
 }
 
-function filterFleet() { renderFleet(); }
+function filterFleet() {
+  renderFleet();
+}
 
-// ── Toast ──
+// ── showToast ──
 function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  clearTimeout(t._toastTimeout);
-  t._toastTimeout = setTimeout(() => t.classList.remove('show'), 2500);
+  const toast = document.getElementById('toast');
+  if (!toast) return;
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 3000);
 }
 
 // ── Init ──
-renderFleet();
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', renderFleet);
+} else {
+  renderFleet();
+}
 </script>
 </body>
 </html>
