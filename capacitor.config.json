@@ -1,0 +1,20 @@
+{
+  "appId": "uk.co.armahire.fleethub",
+  "appName": "Fleet Hub",
+  "webDir": "www",
+  "android": {
+    "backgroundColor": "#0a0e1a",
+    "allowMixedContent": false
+  },
+  "ios": {
+    "backgroundColor": "#0a0e1a",
+    "contentInset": "never"
+  },
+  "plugins": {
+    "StatusBar": {
+      "style": "DARK",
+      "backgroundColor": "#0a0e1a",
+      "overlaysWebView": true
+    }
+  }
+}
